@@ -84,7 +84,7 @@ unsafe fn on_create_file(
 
     // FIXME: This path is relative to the exe folder, but is sometimes something like ..\exe\data\exe1.dat. We should canonicalize it in all cases to intercept all reads.
     let path = clean_path::clean(path);
-
+   
     let mut assets_replacer = assets::REPLACER.get().unwrap().lock().unwrap();
     let new_path = if let Some(new_path) = assets_replacer.get(&path).unwrap() {
         new_path
@@ -150,16 +150,20 @@ unsafe fn on_pck_load(
     );
     // Called first but actually called last?
     let return_val = mmbnlc_PckLoad.call(sound_engine_class, pck_file_name, unk_pck_ptr);
-    let mod_audio = mods::MODAUDIOFILES.get().unwrap().lock().unwrap();
+    //let mod_audio = mods::MODAUDIOFILES.get().unwrap().lock().unwrap();
     if let Some(pck_str) = pck_wstr.to_str() {
         match pck_str {
             "Vol1.pck" | "Vol2.pck" => {
-                for pck in &mod_audio.pcks {
+                let listOfPcks = mods::MODAUDIOFILES.get().unwrap().lock().unwrap().pcks.clone();
+              
+                
+                for pck in &listOfPcks{
                     let mod_pck_wstr = pck
                         .encode_wide()
                         .chain(std::iter::once(0))
                         .collect::<Vec<_>>();
                     let mod_pck_wstr_ptr = mod_pck_wstr[..].as_ptr();
+                    
                     mmbnlc_PckLoad.call(sound_engine_class, mod_pck_wstr_ptr, unk_pck_ptr);
                 }
             }

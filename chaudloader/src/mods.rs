@@ -1,3 +1,7 @@
+use std::path::PathBuf;
+
+use crate::assets::audio::AudioPcks::ModAudioPath;
+
 pub mod lua;
 
 #[derive(serde::Deserialize, Debug)]
@@ -64,6 +68,8 @@ impl ModFunctions {
 pub struct ModAudioFiles {
     pub pcks: Vec<std::ffi::OsString>,
     pub wems: std::collections::HashMap<u32, std::path::PathBuf>,
+    pub modPaths:Vec<(ModAudioPath,PathBuf)>
+    
 }
 
 impl ModAudioFiles {
@@ -71,6 +77,7 @@ impl ModAudioFiles {
         Self {
             pcks: Vec::new(),
             wems: std::collections::HashMap::new(),
+            modPaths:vec!()
         }
     }
 }

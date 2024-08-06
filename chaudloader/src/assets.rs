@@ -1,6 +1,7 @@
 pub mod exedat;
 pub mod mpak;
 pub mod msg;
+pub mod audio;
 
 pub trait ReadSeek: std::io::Read + std::io::Seek {}
 impl<T: std::io::Read + std::io::Seek> ReadSeek for T {}

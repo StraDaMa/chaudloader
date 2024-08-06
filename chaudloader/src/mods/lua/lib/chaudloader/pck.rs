@@ -1,4 +1,4 @@
-use crate::{mods, path};
+use crate::{assets::audio::AudioPcks::ModAudioPath, mods, path};
 use mlua::ExternalError;
 
 pub fn new<'a>(
@@ -31,10 +31,17 @@ pub fn new<'a>(
                         if mod_audio.pcks.contains(&base_filename) {
                             return Err(anyhow::anyhow!("a pck file named {} is already being loaded", base_filename.to_str().unwrap()).into_lua_err());
                         } else {
+                            
                             // Copy this pck to the audio folder so it can be loaded
-                            let dst_pck_path = std::path::PathBuf::from("audio").join(&base_filename);
-                            std::fs::copy(&pck_path, &dst_pck_path)
-                                .map_err(|e| e.into_lua_err())?;
+                            let brandnewAudio=ModAudioPath::new(Box::new(pck_path)).unwrap();
+                            
+                            
+                            let dst_pck_path = std::path::PathBuf::from("..\\exe\\audio").join(&base_filename);
+
+                            mod_audio.modPaths.push((brandnewAudio,dst_pck_path));
+                            
+                            //std::fs::copy(&pck_path, &dst_pck_path)
+                            //    .map_err(|e| e.into_lua_err())?;
                             mod_audio.pcks.push(base_filename);
                             return Ok(());
                         }
